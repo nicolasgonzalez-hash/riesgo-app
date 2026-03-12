@@ -15,7 +15,7 @@
 
 import type { Sesion } from '@/src/models/sesion/types';
 import type { AnalisisHAZOP, AnalisisFMEA } from '@/src/models/analisis/types';
-import type { Peligro, Barrera, POE, SOL } from '@/src/models/hallazgo/types';
+import type { Peligro, Barrera, POE, SOL, Severidad } from '@/src/models/hallazgo/types';
 import type { RelacionHallazgo, RelacionAnalisis } from '@/src/models/relaciones/types';
 
 // Import validators
@@ -322,7 +322,7 @@ const fmeaRPNAlto: AnalisisFMEA = {
 const resultFMEARPNAlto = validarAnalisisFMEA(fmeaRPNAlto);
 assert(
   resultFMEARPNAlto.valido === true &&
-  resultFMEARPNAlto.advertencias?.some(a => a.includes('RPN alto')),
+  (resultFMEARPNAlto.advertencias ?? []).some(a => a.includes('RPN alto')),
   'FMEA válido: Genera advertencia para RPN alto (≥400)'
 );
 
@@ -534,11 +534,11 @@ assert(
 );
 
 // Test 2.5: validarPeligro with high severity warning
-const peligroSeveridad4 = { ...peligroValido, severidad: 4 };
+const peligroSeveridad4 = { ...peligroValido, severidad: 4 as Severidad };
 const resultPeligroSeveridad4 = validarPeligro(peligroSeveridad4);
 assert(
   resultPeligroSeveridad4.valido === true &&
-  resultPeligroSeveridad4.advertencias?.some(a => a.includes('Severidad alta')),
+  (resultPeligroSeveridad4.advertencias ?? []).some(a => a.includes('Severidad alta')),
   'Peligro válido: Genera advertencia para severidad alta (≥4)'
 );
 
@@ -600,7 +600,7 @@ const barreraBajaEfectividad: Barrera = {
 const resultBarreraBajaEfectividad = validarBarrera(barreraBajaEfectividad);
 assert(
   resultBarreraBajaEfectividad.valido === true &&
-  resultBarreraBajaEfectividad.advertencias?.some(a => a.includes('Efectividad baja')),
+  (resultBarreraBajaEfectividad.advertencias ?? []).some(a => a.includes('Efectividad baja')),
   'Barrera válida: Genera advertencia para efectividad baja (≤2)'
 );
 
@@ -686,7 +686,7 @@ const solNoIndependiente: SOL = {
 const resultSOLNoIndependiente = validarSOL(solNoIndependiente);
 assert(
   resultSOLNoIndependiente.valido === true &&
-  resultSOLNoIndependiente.advertencias?.some(a => a.includes('NO independiente')),
+  (resultSOLNoIndependiente.advertencias ?? []).some(a => a.includes('NO independiente')),
   'SOL válido: Genera advertencia para capa no independiente'
 );
 
@@ -775,7 +775,7 @@ const relacionDuplicada: RelacionHallazgo = {
 
 const resultRelacionDuplicada = validarRelacionHallazgo(relacionDuplicada, sesion);
 assert(
-  resultRelacionDuplicada.advertencias?.some(a => a.includes('duplicada')),
+  (resultRelacionDuplicada.advertencias ?? []).some(a => a.includes('duplicada')),
   'RelacionHallazgo: Genera advertencia por relación duplicada'
 );
 

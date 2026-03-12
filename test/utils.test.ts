@@ -420,11 +420,16 @@ assert(
 );
 
 const primeraFila = tablaData[0];
+// ✅ ubication en tablaData es STRING (ej: "50, 50"), no objeto
+const tieneCamposRequeridos = 
+  typeof primeraFila.id === 'string' &&
+  typeof primeraFila.tipo === 'string' &&
+  typeof primeraFila.titulo === 'string' &&
+  typeof primeraFila.ubicacion === 'string' &&
+  primeraFila.ubicacion.includes(',');
+
 assert(
-  primeraFila.id &&
-  primeraFila.tipo &&
-  primeraFila.titulo &&
-  primeraFila.ubicacion.includes(','),
+  tieneCamposRequeridos,
   'hallazgosToTablaData: Row tiene campos requeridos'
 );
 
