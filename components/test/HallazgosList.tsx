@@ -5,6 +5,7 @@ import { useHallazgo } from '@/src/controllers/useHallazgo';
 import { useAnalisis } from '@/src/controllers/useAnalisis';
 import type { Hallazgo, Peligro, Barrera } from '@/src/models/hallazgo/types';
 import type { AnalisisOrigen } from '@/src/models/analisis/types';
+import { isAnalisisHAZOP, isAnalisisFMEA, isAnalisisLOPA, isAnalisisOCA } from '@/src/models/analisis/types';
 
 const TIPO_COLORS: Record<string, string> = {
   Peligro:  'rgba(239,68,68,0.12)',
@@ -110,8 +111,12 @@ function CountBadges({ hallazgos }: { hallazgos: Hallazgo[] }) {
 }
 
 function AnalisisRow({ analisis }: { analisis: AnalisisOrigen }) {
-  const datos = analisis.datos as Record<string, unknown>;
-  const titulo = (datos.nodo || datos.componente || datos.titulo || datos.escenario || datos.eventoIniciador || analisis.base.id) as string;
+  let titulo: string = analisis.base.id;
+  if (isAnalisisHAZOP(analisis)) titulo = analisis.datos.nodo;
+  else if (isAnalisisFMEA(analisis)) titulo = analisis.datos.componente;
+  else if (isAnalisisLOPA(analisis)) titulo = analisis.datos.escenario;
+  else if (isAnalisisOCA(analisis)) titulo = analisis.datos.eventoIniciador;
+  else titulo = analisis.datos.titulo;
   return (
     <div style={{
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
